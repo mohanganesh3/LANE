@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - LANE Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f9fafb;
+        }
+
+        .admin-content {
+            padding: 30px;
+        }
+
+        .settings-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group small {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/admin-sidebar.ejs', {active: 'settings'}) %>
+
+    <div class="admin-main">
+        <%- include('../partials/admin-header.ejs', {title: 'System Settings', user}) %>
+
+        <div class="admin-content">
+            <form id="settingsForm">
+                <!-- Commission & Pricing -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <i class="fas fa-rupee-sign"></i> Commission & Pricing
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Platform Commission (%)</label>
+                            <input type="number" name="commission" value="10" min="0" max="50" step="0.5">
+                            <small>Percentage charged on each booking</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Base Fare (₹)</label>
+                            <input type="number" name="baseFare" value="20" min="0">
+                            <small>Minimum charge per ride</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Price Per Kilometer (₹)</label>
+                            <input type="number" name="pricePerKm" value="5" min="0" step="0.1">
+                            <small>Cost per km of ride</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Price Per Minute (₹)</label>
+                            <input type="number" name="pricePerMinute" value="1" min="0" step="0.1">
+                            <small>Cost per minute of ride</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Safety Thresholds -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <i class="fas fa-shield-alt"></i> Safety Thresholds
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Max Speed Alert (km/h)</label>
+                            <input type="number" name="maxSpeed" value="100" min="60" max="150">
+                            <small>Alert when speed exceeds this limit</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Route Deviation Alert (meters)</label>
+                            <input type="number" name="routeDeviation" value="500" min="100" max="2000">
+                            <small>Alert when driver deviates from route</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Minimum Driver Rating</label>
+                            <input type="number" name="minRating" value="3.5" min="1" max="5" step="0.1">
+                            <small>Minimum rating to offer rides</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Auto-Suspend Reports</label>
+                            <input type="number" name="autoSuspend" value="3" min="1" max="10">
+                            <small>Suspend account after X reports</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <i class="fas fa-bell"></i> Notification Settings
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="emailNotifications" checked>
+                                Enable Email Notifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="smsNotifications" checked>
+                                Enable SMS Notifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="pushNotifications" checked>
+                                Enable Push Notifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="sosAlerts" checked>
+                                Real-time SOS Alerts
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Features -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <i class="fas fa-toggle-on"></i> Feature Toggles
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="rideSharingEnabled" checked>
+                                Enable Ride Sharing
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="chatEnabled" checked>
+                                Enable In-App Chat
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="reviewsEnabled" checked>
+                                Enable Reviews & Ratings
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="paymentOnline" checked>
+                                Online Payment Required
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="verificationRequired" checked>
+                                Driver Verification Required
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="maintenanceMode">
+                                Maintenance Mode
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Configuration -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <i class="fas fa-envelope"></i> Email Configuration
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>SMTP Host</label>
+                            <input type="text" name="smtpHost" value="smtp.gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>SMTP Port</label>
+                            <input type="number" name="smtpPort" value="587">
+                        </div>
+                        <div class="form-group">
+                            <label>From Email</label>
+                            <input type="email" name="fromEmail" value="noreply@lanecarpool.com">
+                        </div>
+                        <div class="form-group">
+                            <label>From Name</label>
+                            <input type="text" name="fromName" value="LANE Carpool">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SMS Configuration -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <i class="fas fa-sms"></i> SMS Configuration (Twilio)
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Twilio Account SID</label>
+                            <input type="text" name="twilioSid" value="ACxxxxxxxxxxxxxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>Twilio Phone Number</label>
+                            <input type="text" name="twilioPhone" value="+1234567890">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div style="text-align: center; padding: 20px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save All Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const settings = {};
+            
+            for (let [key, value] of formData.entries()) {
+                settings[key] = value;
+            }
+            
+            try {
+                const response = await fetch('/admin/settings', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(settings)
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Settings saved successfully!');
+                } else {
+                    alert('❌ Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error saving settings');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

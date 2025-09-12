@@ -1,0 +1,28 @@
+{
+  "watch": [
+    "server.js",
+    "routes/**/*.js",
+    "controllers/**/*.js",
+    "models/**/*.js",
+    "middleware/**/*.js",
+    "config/**/*.js",
+    "utils/**/*.js"
+  ],
+  "ignore": [
+    "node_modules/**/*",
+    "public/**/*",
+    "views/**/*",
+    "docs/**/*",
+    "*.log"
+  ],
+  "ext": "js,json",
+  "delay": "1000",
+  "verbose": true,
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "colours": true,
+  "events": {
+    "restart": "echo '\n\n🔄 Server restarting due to file changes...\n'"
+  }
+}
