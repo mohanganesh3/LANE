@@ -1,6 +1,7 @@
 /**
  * Tracking Controller
  * Handles real-time ride tracking functionality
+ * Features: Live location updates, breadcrumb trails, Socket.IO integration
  */
 
 const Booking = require('../models/Booking');
