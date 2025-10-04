@@ -200,9 +200,21 @@ exports.updateLocation = asyncHandler(async (req, res) => {
         throw new AppError('Only the rider can update location', 403);
     }
 
-    // Check ride is in progress
-    if (ride.status !== 'IN_PROGRESS') {
-        throw new AppError('Ride is not in progress', 400);
+    // Check ride status (allow ACTIVE or IN_PROGRESS to start streaming)
+    if (!['IN_PROGRESS', 'ACTIVE'].includes(ride.status)) {
+        throw new AppError('Ride is not active', 400);
+    }
+
+    // Ensure tracking object exists
+    if (!ride.tracking) {
+        ride.tracking = {};
+    }
+    if (!Array.isArray(ride.tracking.breadcrumbs)) {
+        ride.tracking.breadcrumbs = [];
+    }
+    if (!ride.tracking.isLive) {
+        ride.tracking.isLive = true;
+        ride.tracking.startedAt = ride.tracking.startedAt || new Date();
     }
 
     // Update current location
@@ -215,12 +227,15 @@ exports.updateLocation = asyncHandler(async (req, res) => {
 
     ride.tracking.lastUpdated = new Date();
 
-    // Add to breadcrumbs
+    // Add to breadcrumbs (cap to last 500 points)
     ride.tracking.breadcrumbs.push({
         coordinates: [longitude, latitude],
         timestamp: new Date(),
         speed: speed || 0
     });
+    if (ride.tracking.breadcrumbs.length > 500) {
+        ride.tracking.breadcrumbs = ride.tracking.breadcrumbs.slice(-500);
+    }
 
     await ride.save();
 

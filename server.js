@@ -35,6 +35,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
+// Expose Socket.IO instance to controllers via req.app.get('io')
+// This enables controllers to emit events (e.g., live tracking updates)
+app.set('io', io);
+
 // Connect to MongoDB
 connectDB();
 

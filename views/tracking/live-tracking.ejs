@@ -455,6 +455,26 @@ setInterval(() => {
 // Initialize map on page load
 document.addEventListener('DOMContentLoaded', () => {
     initMap();
+    // Fix grey map (Leaflet needs a size invalidate after render)
+    setTimeout(() => {
+        try { map.invalidateSize(); } catch (e) {}
+    }, 250);
+
+    // Polling fallback in case socket events are missed
+    const poll = async () => {
+        try {
+            const res = await fetch(`/tracking/api/${bookingId}`);
+            const json = await res.json();
+            if (json?.success && json.data?.currentLocation?.coordinates) {
+                const [lng, lat] = json.data.currentLocation.coordinates;
+                updateCurrentLocation({ latitude: lat, longitude: lng, speed: json.data.currentLocation.speed || 0 });
+            }
+        } catch (err) {
+            console.warn('Tracking poll failed', err);
+        }
+    };
+    // Poll every 8 seconds as a light fallback
+    setInterval(poll, 8000);
 });
 
 // Cleanup on page unload
