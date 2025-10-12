@@ -2248,7 +2248,8 @@
             try {
                 console.log('📍 Sending location update:', { latitude, longitude, speed, accuracy });
 
-                const response = await fetch('/api/tracking/<%= ride._id %>/location', {
+                // NOTE: Tracking API is mounted under /tracking
+                const response = await fetch('/tracking/api/<%= ride._id %>/location', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
