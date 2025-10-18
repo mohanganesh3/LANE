@@ -3,9 +3,17 @@ import { useState } from 'react';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError('');
+    
+    if (!email || !password) {
+      setError('Please fill all fields');
+      return;
+    }
+    
     console.log('Login:', { email, password });
   };
 
