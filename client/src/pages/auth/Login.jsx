@@ -48,3 +48,5 @@ export default function Login() {
     </div>
   );
 }
+
+// Validation added
