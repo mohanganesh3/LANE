@@ -12,17 +12,76 @@ function Register() {
     role: 'user'
   });
 
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 3) {
+      newErrors.name = 'Name must be at least 3 characters';
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!formData.phone) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!phoneRegex.test(formData.phone.replace(/[-\s]/g, ''))) {
+      newErrors.phone = 'Phone number must be 10 digits';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error for this field
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Form submission logic will be implemented
-    console.log('Form submitted:', formData);
+    
+    if (validateForm()) {
+      setLoading(true);
+      // API call will be implemented later
+      console.log('Form submitted:', formData);
+      setTimeout(() => setLoading(false), 1000);
+    }
   };
 
   return (
@@ -40,8 +99,9 @@ function Register() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              required
+              className={errors.name ? 'error' : ''}
             />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -52,8 +112,9 @@ function Register() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
+              className={errors.email ? 'error' : ''}
             />
+            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
           <div className="form-group">
@@ -64,8 +125,10 @@ function Register() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              required
+              placeholder="10-digit phone number"
+              className={errors.phone ? 'error' : ''}
             />
+            {errors.phone && <span className="error-message">{errors.phone}</span>}
           </div>
 
           <div className="form-group">
@@ -76,8 +139,9 @@ function Register() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              required
+              className={errors.password ? 'error' : ''}
             />
+            {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
 
           <div className="form-group">
@@ -88,8 +152,9 @@ function Register() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              required
+              className={errors.confirmPassword ? 'error' : ''}
             />
+            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
           </div>
 
           <div className="form-group">
@@ -105,7 +170,9 @@ function Register() {
             </select>
           </div>
 
-          <button type="submit" className="btn-register">Create Account</button>
+          <button type="submit" className="btn-register" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
+          </button>
         </form>
 
         <div className="register-footer">
