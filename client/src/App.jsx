@@ -1,5 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
 
 function App() {
   return (
@@ -7,13 +10,18 @@ function App() {
       <div className="app">
         <Routes>
           <Route path="/" element={
-            <div>
+            <div style={{ padding: '40px', textAlign: 'center' }}>
               <h1>LANE - Rideshare Platform</h1>
               <p>Welcome to LANE! React migration in progress...</p>
+              <div style={{ marginTop: '20px' }}>
+                <a href="/login" style={{ marginRight: '15px', color: '#667eea' }}>Login</a>
+                <a href="/register" style={{ color: '#667eea' }}>Register</a>
+              </div>
             </div>
           } />
-          <Route path="/login" element={<div><h2>Login Page</h2></div>} />
-          <Route path="/register" element={<div><h2>Register Page</h2></div>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </div>
     </Router>
