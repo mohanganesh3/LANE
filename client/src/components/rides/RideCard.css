@@ -1,0 +1,311 @@
+.ride-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.ride-card:hover {
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+  transform: translateY(-3px);
+}
+
+.ride-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.driver-avatar {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.driver-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.verified-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #4CAF50;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  border: 2px solid white;
+}
+
+.driver-details h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.review-count {
+  color: #999;
+  font-size: 12px;
+}
+
+.ride-price {
+  text-align: right;
+}
+
+.currency-symbol {
+  font-size: 18px;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.price-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #667eea;
+  margin-left: 2px;
+}
+
+.price-label {
+  display: block;
+  font-size: 11px;
+  color: #999;
+  margin-top: -5px;
+}
+
+.ride-card-body {
+  margin-bottom: 20px;
+}
+
+.route-info {
+  margin-bottom: 15px;
+}
+
+.route-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.route-icon {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.route-details {
+  flex: 1;
+}
+
+.location {
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.time {
+  font-size: 13px;
+  color: #666;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0 5px 31px;
+}
+
+.line {
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+.line::before,
+.line::after {
+  content: '';
+  position: absolute;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #667eea;
+}
+
+.line::before {
+  top: -4px;
+}
+
+.line::after {
+  bottom: -4px;
+  background: #764ba2;
+}
+
+.duration {
+  font-size: 12px;
+  color: #999;
+  background: #f5f5f5;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.ride-meta {
+  display: flex;
+  gap: 20px;
+  padding: 15px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.vehicle-info,
+.seats-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.seats-info {
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.low-seats {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.seats-bar {
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.seats-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50 0%, #FFC107 100%);
+  transition: width 0.3s;
+}
+
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.amenity-badge {
+  background: #f5f5f5;
+  color: #666;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ride-card-footer {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-view-details,
+.btn-book-now {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-view-details {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-view-details:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.btn-book-now {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-book-now:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+  .ride-card {
+    padding: 15px;
+  }
+
+  .ride-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .ride-price {
+    text-align: left;
+  }
+
+  .ride-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
