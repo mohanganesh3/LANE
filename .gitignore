@@ -62,3 +62,4 @@ coverage/
 
 # Scripts
 fix-*.sh
+DETAILED_MIGRATION_SCHEDULE.md

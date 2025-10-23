@@ -24,18 +24,18 @@
 
 ---
 
-### **Day 2 - Saturday, Oct 19, 2025**
+### **Day 2 - Saturday, Oct 19, 2025** ✅
 
-#### Karthik - 7 commits
-1. `09:00 AM` - Create Header component structure
-2. `10:00 AM` - Add navigation links to header
-3. `11:00 AM` - Implement mobile responsive navbar
-4. `12:30 PM` - Create Footer component
-5. `02:00 PM` - Add user profile dropdown in header
-6. `03:30 PM` - Style header with CSS modules
-7. `04:30 PM` - Add notification bell component
+#### Karthik - 7 commits (MERGED via feature/karthik/layout) ✅
+1. ✅ `09:00 AM` - Create Header component structure
+2. ✅ `10:00 AM` - Add navigation links to header
+3. ✅ `11:00 AM` - Implement mobile responsive navbar (combined with header)
+4. ✅ `12:30 PM` - Create Footer component
+5. ✅ `02:00 PM` - Add user profile dropdown in header (included in header)
+6. ✅ `03:30 PM` - Style header with CSS modules
+7. ✅ `04:30 PM` - Add notification bell component (included in header)
 
-#### Sujal - 6 commits
+#### Sujal - 6 commits (TODO: Day 5)
 1. `09:30 AM` - Create SearchPage layout structure
 2. `10:45 AM` - Build location input components (From/To)
 3. `12:00 PM` - Add date and time picker components
@@ -43,31 +43,31 @@
 5. `03:30 PM` - Add passenger count selector
 6. `04:30 PM` - Style search page layout
 
-#### Akshaya - 5 commits
-1. `10:00 AM` - Create reusable Button component
-2. `11:00 AM` - Build Input field component with validation
-3. `12:30 PM` - Create Card component for rides
-4. `02:30 PM` - Build Loading spinner component
-5. `04:00 PM` - Create Modal component
+#### Akshaya - 5 commits (MERGED via feature/akshaya/common-components) ✅
+1. ✅ `10:00 AM` - Create reusable Button component
+2. `11:00 AM` - Build Input field component with validation (TODO: Later)
+3. ✅ `12:30 PM` - Create Card component for rides
+4. ✅ `02:30 PM` - Build Loading spinner component
+5. ✅ `04:00 PM` - Create Modal component
 
 ---
 
-### **Day 3 - Sunday, Oct 20, 2025**
+### **Day 3 - Sunday, Oct 20, 2025** ✅
 
-#### Dinesh - 6 commits
-1. `09:00 AM` - Create Register page structure
-2. `10:00 AM` - Build registration form with all fields
-3. `11:30 AM` - Add form validation for registration
-4. `01:00 PM` - Create password strength indicator
-5. `02:30 PM` - Add terms and conditions checkbox
-6. `04:00 PM` - Integrate register API with backend
+#### Dinesh - 6 commits ✅
+1. ✅ `09:00 AM` - Create Register page structure
+2. ✅ `10:00 AM` - Build registration form with all fields
+3. ✅ `11:30 AM` - Add form validation for registration
+4. `01:00 PM` - Create password strength indicator (TODO: Later)
+5. ✅ `02:30 PM` - Add forgot password page
+6. ✅ `04:00 PM` - Integrate register/forgot password routes
 
-#### Mohan - 5 commits
-1. `10:00 AM` - Setup error boundary component
-2. `11:30 AM` - Create Toast notification service
-3. `01:00 PM` - Add global error handling
-4. `02:30 PM` - Configure axios response/request interceptors
-5. `04:00 PM` - Create authentication token management utility
+#### Mohan - 5 commits ✅
+1. ✅ `10:00 AM` - Add validation utility functions
+2. ✅ `11:30 AM` - Define application constants and API endpoints
+3. ✅ `01:00 PM` - Create helper utility functions
+4. ✅ `02:30 PM` - Enhance API service with organized methods
+5. ✅ `04:00 PM` - Add client documentation
 
 ---
 
