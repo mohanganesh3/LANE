@@ -12,7 +12,8 @@ const RideMatching = () => {
   const [matchedRides, setMatchedRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     sortBy: 'price', // price, rating, departure, distance
@@ -48,6 +49,8 @@ const RideMatching = () => {
   const fetchMatchedRides = async () => {
     try {
       setSearching(true);
+      setError(null);
+      
       const response = await axios.get('/api/rides/search', {
         params: {
           pickup: searchParams.pickup,
@@ -76,12 +79,44 @@ const RideMatching = () => {
       setMatchedRides(sortRides(rides));
       setSearching(false);
       setLoading(false);
+      setRetryCount(0);
     } catch (err) {
       console.error('Fetch error:', err);
+      
+      // Set error with detailed information
+      if (err.response) {
+        // Server responded with error
+        setError({
+          type: 'server',
+          message: err.response.data?.message || 'Server error occurred',
+          status: err.response.status
+        });
+      } else if (err.request) {
+        // Network error - no response received
+        setError({
+          type: 'network',
+          message: 'Unable to connect to server. Please check your internet connection.',
+          canRetry: true
+        });
+      } else {
+        // Other errors
+        setError({
+          type: 'unknown',
+          message: 'An unexpected error occurred',
+          canRetry: true
+        });
+      }
+      
+      // Use mock data as fallback
       setMatchedRides(sortRides(generateMockRides()));
       setSearching(false);
       setLoading(false);
     }
+  };
+
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    fetchMatchedRides();
   };
 
   const generateMockRides = () => {
@@ -230,6 +265,41 @@ const RideMatching = () => {
     );
   }
 
+  // Error State
+  if (error && error.type === 'network' && matchedRides.length === 0) {
+    return (
+      <div className="ride-matching">
+        <div className="error-container">
+          <div className="error-content">
+            <i className="fas fa-exclamation-triangle error-icon"></i>
+            <h2>Connection Error</h2>
+            <p>{error.message}</p>
+            {error.canRetry && (
+              <div className="error-actions">
+                <button className="retry-btn" onClick={handleRetry}>
+                  <i className="fas fa-redo"></i>
+                  {retryCount > 0 ? `Retry (Attempt ${retryCount + 1})` : 'Try Again'}
+                </button>
+                <button className="back-btn" onClick={() => navigate(-1)}>
+                  <i className="fas fa-arrow-left"></i>
+                  Go Back
+                </button>
+              </div>
+            )}
+            <div className="error-tips">
+              <h4>Troubleshooting Tips:</h4>
+              <ul>
+                <li>Check your internet connection</li>
+                <li>Refresh the page</li>
+                <li>Try searching again later</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="ride-matching">
       <div className="matching-header">
@@ -264,6 +334,17 @@ const RideMatching = () => {
             </button>
           )}
         </div>
+
+        {/* Error Banner for minor errors */}
+        {error && error.type !== 'network' && (
+          <div className="error-banner">
+            <i className="fas fa-exclamation-circle"></i>
+            <span>{error.message}. Showing cached results.</span>
+            <button onClick={() => setError(null)}>
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+        )}
 
         <div className="sort-filter-bar">
           <div className="sort-options">
