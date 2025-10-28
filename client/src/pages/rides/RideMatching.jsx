@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDebounce, useDebouncedCallback } from '../../hooks/useDebounce';
+import searchAnalytics from '../../utils/searchAnalytics';
 import './RideMatching.css';
 
 const RideMatching = () => {
@@ -10,7 +12,10 @@ const RideMatching = () => {
 
   const [matchedRides, setMatchedRides] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     sortBy: 'price', // price, rating, departure, distance
     maxPrice: searchParams.maxPrice || 1000,
@@ -27,29 +32,122 @@ const RideMatching = () => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [compareList, setCompareList] = useState([]);
 
+  // Debounce search query (500ms delay)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  
+  // Debounce price filter (300ms delay for smoother slider)
+  const debouncedMaxPrice = useDebounce(filters.maxPrice, 300);
+
   useEffect(() => {
     fetchMatchedRides();
-  }, [filters.sortBy]);
+  }, [filters.sortBy, debouncedSearchQuery, debouncedMaxPrice, filters.minSeats, filters.vehicleType]);
+
+  // Debounced filter update
+  const debouncedFilterUpdate = useDebouncedCallback((filterName, value) => {
+    console.log(`Filter ${filterName} debounced to:`, value);
+  }, 300);
 
   const fetchMatchedRides = async () => {
+    const searchStartTime = performance.now();
+    
     try {
-      setLoading(true);
+      setSearching(true);
+      setError(null);
+      
       const response = await axios.get('/api/rides/search', {
         params: {
           pickup: searchParams.pickup,
           dropoff: searchParams.dropoff,
           date: searchParams.date,
           seats: filters.minSeats,
+          query: debouncedSearchQuery,
+          maxPrice: debouncedMaxPrice,
+          vehicleType: filters.vehicleType !== 'all' ? filters.vehicleType : undefined,
           ...filters.preferences
         }
       });
-      setMatchedRides(sortRides(response.data.rides || generateMockRides()));
+      
+      let rides = response.data.rides || generateMockRides();
+      
+      // Apply local search filter if query exists
+      if (debouncedSearchQuery) {
+        rides = rides.filter(ride =>
+          ride.driver.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+          ride.route.pickup.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+          ride.route.dropoff.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+          ride.vehicle.model.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+        );
+      }
+      
+      const sortedRides = sortRides(rides);
+      setMatchedRides(sortedRides);
+      setSearching(false);
       setLoading(false);
+      setRetryCount(0);
+      
+      // Track successful search
+      const searchEndTime = performance.now();
+      searchAnalytics.trackSearch({
+        query: debouncedSearchQuery,
+        pickup: searchParams.pickup,
+        dropoff: searchParams.dropoff,
+        date: searchParams.date,
+        seats: filters.minSeats,
+        filters: filters,
+        resultsCount: sortedRides.length
+      });
+      
+      // Track performance
+      searchAnalytics.trackPerformance({
+        searchDuration: searchEndTime - searchStartTime,
+        resultsRendered: sortedRides.length,
+        debounceDelay: 500
+      });
     } catch (err) {
       console.error('Fetch error:', err);
+      
+      // Track error
+      searchAnalytics.trackError({
+        type: err.response ? 'server' : err.request ? 'network' : 'unknown',
+        message: err.message,
+        context: 'fetchMatchedRides',
+        retryAttempt: retryCount
+      });
+      
+      // Set error with detailed information
+      if (err.response) {
+        // Server responded with error
+        setError({
+          type: 'server',
+          message: err.response.data?.message || 'Server error occurred',
+          status: err.response.status
+        });
+      } else if (err.request) {
+        // Network error - no response received
+        setError({
+          type: 'network',
+          message: 'Unable to connect to server. Please check your internet connection.',
+          canRetry: true
+        });
+      } else {
+        // Other errors
+        setError({
+          type: 'unknown',
+          message: 'An unexpected error occurred',
+          canRetry: true
+        });
+      }
+      
+      // Use mock data as fallback
       setMatchedRides(sortRides(generateMockRides()));
+      setSearching(false);
       setLoading(false);
     }
+  };
+
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    fetchMatchedRides();
   };
 
   const generateMockRides = () => {
@@ -122,6 +220,13 @@ const RideMatching = () => {
 
   const handleSortChange = (sortType) => {
     setFilters({ ...filters, sortBy: sortType });
+    
+    // Track filter change
+    searchAnalytics.trackFilter({
+      filterType: 'sort',
+      value: sortType,
+      allFilters: { ...filters, sortBy: sortType }
+    });
   };
 
   const handleFilterChange = (filterName, value) => {
@@ -129,15 +234,32 @@ const RideMatching = () => {
       ...filters,
       [filterName]: value
     });
+    
+    // Track filter change
+    searchAnalytics.trackFilter({
+      filterType: filterName,
+      value: value,
+      allFilters: { ...filters, [filterName]: value }
+    });
   };
 
   const handlePreferenceChange = (preference) => {
+    const newPreferences = {
+      ...filters.preferences,
+      [preference]: !filters.preferences[preference]
+    };
+    
     setFilters({
       ...filters,
-      preferences: {
-        ...filters.preferences,
-        [preference]: !filters.preferences[preference]
-      }
+      preferences: newPreferences
+    });
+    
+    // Track preference change
+    searchAnalytics.trackFilter({
+      filterType: 'preference',
+      preference: preference,
+      value: !filters.preferences[preference],
+      allPreferences: newPreferences
     });
   };
 
@@ -154,6 +276,20 @@ const RideMatching = () => {
   };
 
   const handleBookRide = (ride) => {
+    // Track ride click with position
+    const position = filteredRides.findIndex(r => r.id === ride.id) + 1;
+    searchAnalytics.trackRideClick({
+      ...ride,
+      position
+    });
+    
+    // Track engagement
+    searchAnalytics.trackEngagement('book_ride_clicked', {
+      rideId: ride.id,
+      price: ride.pricing?.total,
+      position
+    });
+    
     navigate('/bookings/wizard', { 
       state: { 
         ride,
@@ -172,14 +308,97 @@ const RideMatching = () => {
     return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
   };
 
-  const filteredRides = applyFilters(matchedRides);
+  // Memoize filtered rides to prevent unnecessary recalculations
+  const filteredRides = useMemo(() => {
+    return applyFilters(matchedRides);
+  }, [matchedRides, filters.maxPrice, filters.minSeats, filters.vehicleType, filters.preferences]);
+
+  // Memoize callbacks to prevent re-renders
+  const memoizedToggleCompare = useCallback((ride) => {
+    if (compareList.find(r => r.id === ride.id)) {
+      setCompareList(compareList.filter(r => r.id !== ride.id));
+    } else if (compareList.length < 3) {
+      setCompareList([...compareList, ride]);
+    }
+  }, [compareList]);
+
+  const memoizedHandleBookRide = useCallback((ride) => {
+    // Track ride click with position
+    const position = filteredRides.findIndex(r => r.id === ride.id) + 1;
+    searchAnalytics.trackRideClick({
+      ...ride,
+      position
+    });
+    
+    // Track engagement
+    searchAnalytics.trackEngagement('book_ride_clicked', {
+      rideId: ride.id,
+      price: ride.pricing?.total,
+      position
+    });
+    
+    navigate('/bookings/wizard', { 
+      state: { 
+        ride,
+        searchParams 
+      } 
+    });
+  }, [filteredRides, navigate, searchParams]);
 
   if (loading) {
     return (
       <div className="ride-matching">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Finding best rides for you...</p>
+        <div className="loading-container">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Finding best rides for you...</p>
+            <div className="loading-steps">
+              <div className="step completed">
+                <i className="fas fa-check"></i> Searching routes
+              </div>
+              <div className="step active">
+                <div className="step-spinner"></div> Matching preferences
+              </div>
+              <div className="step">
+                <i className="fas fa-circle"></i> Sorting results
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error State
+  if (error && error.type === 'network' && matchedRides.length === 0) {
+    return (
+      <div className="ride-matching">
+        <div className="error-container">
+          <div className="error-content">
+            <i className="fas fa-exclamation-triangle error-icon"></i>
+            <h2>Connection Error</h2>
+            <p>{error.message}</p>
+            {error.canRetry && (
+              <div className="error-actions">
+                <button className="retry-btn" onClick={handleRetry}>
+                  <i className="fas fa-redo"></i>
+                  {retryCount > 0 ? `Retry (Attempt ${retryCount + 1})` : 'Try Again'}
+                </button>
+                <button className="back-btn" onClick={() => navigate(-1)}>
+                  <i className="fas fa-arrow-left"></i>
+                  Go Back
+                </button>
+              </div>
+            )}
+            <div className="error-tips">
+              <h4>Troubleshooting Tips:</h4>
+              <ul>
+                <li>Check your internet connection</li>
+                <li>Refresh the page</li>
+                <li>Try searching again later</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -197,6 +416,39 @@ const RideMatching = () => {
             Modify Search
           </button>
         </div>
+
+        {/* Debounced Search Input */}
+        <div className="search-container">
+          <i className="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by driver, location, or vehicle..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searching && <div className="search-spinner"></div>}
+          {searchQuery && (
+            <button 
+              className="clear-search" 
+              onClick={() => setSearchQuery('')}
+              title="Clear search"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+          )}
+        </div>
+
+        {/* Error Banner for minor errors */}
+        {error && error.type !== 'network' && (
+          <div className="error-banner">
+            <i className="fas fa-exclamation-circle"></i>
+            <span>{error.message}. Showing cached results.</span>
+            <button onClick={() => setError(null)}>
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+        )}
 
         <div className="sort-filter-bar">
           <div className="sort-options">
@@ -343,7 +595,9 @@ const RideMatching = () => {
 
         <div className="rides-list">
           <div className="results-header">
-            <h2>{filteredRides.length} Rides Found</h2>
+            <h2>
+              {searching ? 'Searching...' : `${filteredRides.length} Rides Found`}
+            </h2>
             {compareList.length > 0 && (
               <div className="compare-info">
                 {compareList.length} selected for comparison
@@ -352,10 +606,61 @@ const RideMatching = () => {
             )}
           </div>
 
-          {filteredRides.length === 0 ? (
+          {searching ? (
+            // Skeleton Loaders
+            <div className="skeleton-container">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="ride-card-skeleton">
+                  <div className="skeleton-header">
+                    <div className="skeleton-avatar"></div>
+                    <div className="skeleton-text-group">
+                      <div className="skeleton-text skeleton-name"></div>
+                      <div className="skeleton-text skeleton-rating"></div>
+                    </div>
+                  </div>
+                  <div className="skeleton-route">
+                    <div className="skeleton-text skeleton-location"></div>
+                    <div className="skeleton-text skeleton-location"></div>
+                  </div>
+                  <div className="skeleton-details">
+                    <div className="skeleton-text skeleton-detail"></div>
+                    <div className="skeleton-text skeleton-detail"></div>
+                    <div className="skeleton-text skeleton-detail"></div>
+                  </div>
+                  <div className="skeleton-footer">
+                    <div className="skeleton-text skeleton-price"></div>
+                    <div className="skeleton-button"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredRides.length === 0 ? (
             <div className="no-rides">
-              <p>No rides match your filters. Try adjusting your search criteria.</p>
+              <i className="fas fa-car"></i>
+              <p>No rides match your current search and filter criteria.</p>
               <button onClick={() => navigate(-1)}>Modify Search</button>
+              
+              <div className="no-rides-suggestions">
+                <h3>Try These Suggestions:</h3>
+                <div className="suggestions-list">
+                  <div className="suggestion-item">
+                    <i className="fas fa-sliders-h"></i>
+                    <span>Adjust your price filter or date range</span>
+                  </div>
+                  <div className="suggestion-item">
+                    <i className="fas fa-map-marker-alt"></i>
+                    <span>Try nearby pickup or dropoff locations</span>
+                  </div>
+                  <div className="suggestion-item">
+                    <i className="fas fa-calendar-alt"></i>
+                    <span>Search for a different date or time</span>
+                  </div>
+                  <div className="suggestion-item">
+                    <i className="fas fa-redo"></i>
+                    <span>Reset all filters and try again</span>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             filteredRides.map(ride => (
@@ -427,14 +732,14 @@ const RideMatching = () => {
                   <div className="actions">
                     <button 
                       className={`compare-btn ${compareList.find(r => r.id === ride.id) ? 'active' : ''}`}
-                      onClick={(e) => { e.stopPropagation(); toggleCompare(ride); }}
+                      onClick={(e) => { e.stopPropagation(); memoizedToggleCompare(ride); }}
                       disabled={compareList.length >= 3 && !compareList.find(r => r.id === ride.id)}
                     >
                       {compareList.find(r => r.id === ride.id) ? 'Remove' : 'Compare'}
                     </button>
                     <button 
                       className="book-btn"
-                      onClick={(e) => { e.stopPropagation(); handleBookRide(ride); }}
+                      onClick={(e) => { e.stopPropagation(); memoizedHandleBookRide(ride); }}
                     >
                       Book Now
                     </button>
@@ -455,7 +760,7 @@ const RideMatching = () => {
           <div className="comparison-grid">
             {compareList.map(ride => (
               <div key={ride.id} className="comparison-card">
-                <button className="remove-compare" onClick={() => toggleCompare(ride)}>×</button>
+                <button className="remove-compare" onClick={() => memoizedToggleCompare(ride)}>×</button>
                 <h4>{ride.driver.name}</h4>
                 <div className="comparison-row">
                   <span>Price:</span>
@@ -481,7 +786,7 @@ const RideMatching = () => {
                   <span>Seats:</span>
                   <strong>{ride.seatsAvailable}</strong>
                 </div>
-                <button className="book-compare" onClick={() => handleBookRide(ride)}>
+                <button className="book-compare" onClick={() => memoizedHandleBookRide(ride)}>
                   Book This Ride
                 </button>
               </div>
