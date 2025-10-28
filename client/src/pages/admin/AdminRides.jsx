@@ -118,24 +118,45 @@ const AdminRides = () => {
   };
 
   const approveRide = async (rideId) => {
+    if (!window.confirm('Are you sure you want to approve this ride?')) {
+      return;
+    }
+
     try {
       await axios.put(`/api/admin/rides/${rideId}/approve`);
       fetchRides();
+      
+      // Close modal if open
+      if (showModal) {
+        closeModal();
+      }
+      
       alert('Ride approved successfully');
     } catch (error) {
       console.error('Error approving ride:', error);
-      alert('Failed to approve ride');
+      alert('Failed to approve ride. Please try again.');
     }
   };
 
   const rejectRide = async (rideId) => {
+    const reason = window.prompt('Please provide a reason for rejection:');
+    if (!reason) {
+      return;
+    }
+
     try {
-      await axios.put(`/api/admin/rides/${rideId}/reject`);
+      await axios.put(`/api/admin/rides/${rideId}/reject`, { reason });
       fetchRides();
+      
+      // Close modal if open
+      if (showModal) {
+        closeModal();
+      }
+      
       alert('Ride rejected successfully');
     } catch (error) {
       console.error('Error rejecting ride:', error);
-      alert('Failed to reject ride');
+      alert('Failed to reject ride. Please try again.');
     }
   };
 
