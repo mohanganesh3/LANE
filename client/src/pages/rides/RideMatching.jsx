@@ -452,8 +452,30 @@ const RideMatching = () => {
           ) : filteredRides.length === 0 ? (
             <div className="no-rides">
               <i className="fas fa-car"></i>
-              <p>No rides match your filters. Try adjusting your search criteria.</p>
+              <p>No rides match your current search and filter criteria.</p>
               <button onClick={() => navigate(-1)}>Modify Search</button>
+              
+              <div className="no-rides-suggestions">
+                <h3>Try These Suggestions:</h3>
+                <div className="suggestions-list">
+                  <div className="suggestion-item">
+                    <i className="fas fa-sliders-h"></i>
+                    <span>Adjust your price filter or date range</span>
+                  </div>
+                  <div className="suggestion-item">
+                    <i className="fas fa-map-marker-alt"></i>
+                    <span>Try nearby pickup or dropoff locations</span>
+                  </div>
+                  <div className="suggestion-item">
+                    <i className="fas fa-calendar-alt"></i>
+                    <span>Search for a different date or time</span>
+                  </div>
+                  <div className="suggestion-item">
+                    <i className="fas fa-redo"></i>
+                    <span>Reset all filters and try again</span>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             filteredRides.map(ride => (
