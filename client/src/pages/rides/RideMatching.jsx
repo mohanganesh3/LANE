@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDebounce, useDebouncedCallback } from '../../hooks/useDebounce';
 import './RideMatching.css';
 
 const RideMatching = () => {
@@ -10,7 +11,9 @@ const RideMatching = () => {
 
   const [matchedRides, setMatchedRides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     sortBy: 'price', // price, rating, departure, distance
     maxPrice: searchParams.maxPrice || 1000,
@@ -27,27 +30,56 @@ const RideMatching = () => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [compareList, setCompareList] = useState([]);
 
+  // Debounce search query (500ms delay)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  
+  // Debounce price filter (300ms delay for smoother slider)
+  const debouncedMaxPrice = useDebounce(filters.maxPrice, 300);
+
   useEffect(() => {
     fetchMatchedRides();
-  }, [filters.sortBy]);
+  }, [filters.sortBy, debouncedSearchQuery, debouncedMaxPrice, filters.minSeats, filters.vehicleType]);
+
+  // Debounced filter update
+  const debouncedFilterUpdate = useDebouncedCallback((filterName, value) => {
+    console.log(`Filter ${filterName} debounced to:`, value);
+  }, 300);
 
   const fetchMatchedRides = async () => {
     try {
-      setLoading(true);
+      setSearching(true);
       const response = await axios.get('/api/rides/search', {
         params: {
           pickup: searchParams.pickup,
           dropoff: searchParams.dropoff,
           date: searchParams.date,
           seats: filters.minSeats,
+          query: debouncedSearchQuery,
+          maxPrice: debouncedMaxPrice,
+          vehicleType: filters.vehicleType !== 'all' ? filters.vehicleType : undefined,
           ...filters.preferences
         }
       });
-      setMatchedRides(sortRides(response.data.rides || generateMockRides()));
+      
+      let rides = response.data.rides || generateMockRides();
+      
+      // Apply local search filter if query exists
+      if (debouncedSearchQuery) {
+        rides = rides.filter(ride =>
+          ride.driver.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+          ride.route.pickup.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+          ride.route.dropoff.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+          ride.vehicle.model.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+        );
+      }
+      
+      setMatchedRides(sortRides(rides));
+      setSearching(false);
       setLoading(false);
     } catch (err) {
       console.error('Fetch error:', err);
       setMatchedRides(sortRides(generateMockRides()));
+      setSearching(false);
       setLoading(false);
     }
   };
@@ -196,6 +228,28 @@ const RideMatching = () => {
           <button className="modify-search" onClick={() => navigate(-1)}>
             Modify Search
           </button>
+        </div>
+
+        {/* Debounced Search Input */}
+        <div className="search-container">
+          <i className="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by driver, location, or vehicle..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searching && <div className="search-spinner"></div>}
+          {searchQuery && (
+            <button 
+              className="clear-search" 
+              onClick={() => setSearchQuery('')}
+              title="Clear search"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+          )}
         </div>
 
         <div className="sort-filter-bar">
