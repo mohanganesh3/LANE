@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDebounce, useDebouncedCallback } from '../../hooks/useDebounce';
@@ -308,7 +308,42 @@ const RideMatching = () => {
     return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
   };
 
-  const filteredRides = applyFilters(matchedRides);
+  // Memoize filtered rides to prevent unnecessary recalculations
+  const filteredRides = useMemo(() => {
+    return applyFilters(matchedRides);
+  }, [matchedRides, filters.maxPrice, filters.minSeats, filters.vehicleType, filters.preferences]);
+
+  // Memoize callbacks to prevent re-renders
+  const memoizedToggleCompare = useCallback((ride) => {
+    if (compareList.find(r => r.id === ride.id)) {
+      setCompareList(compareList.filter(r => r.id !== ride.id));
+    } else if (compareList.length < 3) {
+      setCompareList([...compareList, ride]);
+    }
+  }, [compareList]);
+
+  const memoizedHandleBookRide = useCallback((ride) => {
+    // Track ride click with position
+    const position = filteredRides.findIndex(r => r.id === ride.id) + 1;
+    searchAnalytics.trackRideClick({
+      ...ride,
+      position
+    });
+    
+    // Track engagement
+    searchAnalytics.trackEngagement('book_ride_clicked', {
+      rideId: ride.id,
+      price: ride.pricing?.total,
+      position
+    });
+    
+    navigate('/bookings/wizard', { 
+      state: { 
+        ride,
+        searchParams 
+      } 
+    });
+  }, [filteredRides, navigate, searchParams]);
 
   if (loading) {
     return (
@@ -697,14 +732,14 @@ const RideMatching = () => {
                   <div className="actions">
                     <button 
                       className={`compare-btn ${compareList.find(r => r.id === ride.id) ? 'active' : ''}`}
-                      onClick={(e) => { e.stopPropagation(); toggleCompare(ride); }}
+                      onClick={(e) => { e.stopPropagation(); memoizedToggleCompare(ride); }}
                       disabled={compareList.length >= 3 && !compareList.find(r => r.id === ride.id)}
                     >
                       {compareList.find(r => r.id === ride.id) ? 'Remove' : 'Compare'}
                     </button>
                     <button 
                       className="book-btn"
-                      onClick={(e) => { e.stopPropagation(); handleBookRide(ride); }}
+                      onClick={(e) => { e.stopPropagation(); memoizedHandleBookRide(ride); }}
                     >
                       Book Now
                     </button>
@@ -725,7 +760,7 @@ const RideMatching = () => {
           <div className="comparison-grid">
             {compareList.map(ride => (
               <div key={ride.id} className="comparison-card">
-                <button className="remove-compare" onClick={() => toggleCompare(ride)}>×</button>
+                <button className="remove-compare" onClick={() => memoizedToggleCompare(ride)}>×</button>
                 <h4>{ride.driver.name}</h4>
                 <div className="comparison-row">
                   <span>Price:</span>
@@ -751,7 +786,7 @@ const RideMatching = () => {
                   <span>Seats:</span>
                   <strong>{ride.seatsAvailable}</strong>
                 </div>
-                <button className="book-compare" onClick={() => handleBookRide(ride)}>
+                <button className="book-compare" onClick={() => memoizedHandleBookRide(ride)}>
                   Book This Ride
                 </button>
               </div>
