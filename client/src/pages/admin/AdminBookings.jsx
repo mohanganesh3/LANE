@@ -129,6 +129,40 @@ const AdminBookings = () => {
     setSelectedBooking(null);
   };
 
+  const updateBookingStatus = async (bookingId, newStatus) => {
+    try {
+      await axios.put(`/api/admin/bookings/${bookingId}/status`, { status: newStatus });
+      
+      // Refresh bookings list
+      fetchBookings(currentStatus, currentPage);
+      
+      // Update selected booking if modal is open
+      if (selectedBooking && selectedBooking._id === bookingId) {
+        setSelectedBooking({
+          ...selectedBooking,
+          status: newStatus
+        });
+      }
+
+      alert(`Booking status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+      alert('Failed to update booking status. Please try again.');
+    }
+  };
+
+  const confirmBooking = (bookingId) => {
+    if (window.confirm('Are you sure you want to confirm this booking?')) {
+      updateBookingStatus(bookingId, 'CONFIRMED');
+    }
+  };
+
+  const cancelBooking = (bookingId) => {
+    if (window.confirm('Are you sure you want to cancel this booking?')) {
+      updateBookingStatus(bookingId, 'CANCELLED');
+    }
+  };
+
   const getStatusBadgeClass = (status) => {
     const statusMap = {
       'PENDING': 'badge-pending',
@@ -294,6 +328,25 @@ const AdminBookings = () => {
                     <i className="fas fa-eye"></i>
                     View Details
                   </button>
+                  
+                  {booking.status === 'PENDING' && (
+                    <>
+                      <button
+                        className="btn-confirm"
+                        onClick={() => confirmBooking(booking._id)}
+                      >
+                        <i className="fas fa-check"></i>
+                        Confirm
+                      </button>
+                      <button
+                        className="btn-cancel"
+                        onClick={() => cancelBooking(booking._id)}
+                      >
+                        <i className="fas fa-times"></i>
+                        Cancel
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
