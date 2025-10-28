@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDebounce, useDebouncedCallback } from '../../hooks/useDebounce';
+import searchAnalytics from '../../utils/searchAnalytics';
 import './RideMatching.css';
 
 const RideMatching = () => {
@@ -47,6 +48,8 @@ const RideMatching = () => {
   }, 300);
 
   const fetchMatchedRides = async () => {
+    const searchStartTime = performance.now();
+    
     try {
       setSearching(true);
       setError(null);
@@ -76,12 +79,40 @@ const RideMatching = () => {
         );
       }
       
-      setMatchedRides(sortRides(rides));
+      const sortedRides = sortRides(rides);
+      setMatchedRides(sortedRides);
       setSearching(false);
       setLoading(false);
       setRetryCount(0);
+      
+      // Track successful search
+      const searchEndTime = performance.now();
+      searchAnalytics.trackSearch({
+        query: debouncedSearchQuery,
+        pickup: searchParams.pickup,
+        dropoff: searchParams.dropoff,
+        date: searchParams.date,
+        seats: filters.minSeats,
+        filters: filters,
+        resultsCount: sortedRides.length
+      });
+      
+      // Track performance
+      searchAnalytics.trackPerformance({
+        searchDuration: searchEndTime - searchStartTime,
+        resultsRendered: sortedRides.length,
+        debounceDelay: 500
+      });
     } catch (err) {
       console.error('Fetch error:', err);
+      
+      // Track error
+      searchAnalytics.trackError({
+        type: err.response ? 'server' : err.request ? 'network' : 'unknown',
+        message: err.message,
+        context: 'fetchMatchedRides',
+        retryAttempt: retryCount
+      });
       
       // Set error with detailed information
       if (err.response) {
@@ -189,6 +220,13 @@ const RideMatching = () => {
 
   const handleSortChange = (sortType) => {
     setFilters({ ...filters, sortBy: sortType });
+    
+    // Track filter change
+    searchAnalytics.trackFilter({
+      filterType: 'sort',
+      value: sortType,
+      allFilters: { ...filters, sortBy: sortType }
+    });
   };
 
   const handleFilterChange = (filterName, value) => {
@@ -196,15 +234,32 @@ const RideMatching = () => {
       ...filters,
       [filterName]: value
     });
+    
+    // Track filter change
+    searchAnalytics.trackFilter({
+      filterType: filterName,
+      value: value,
+      allFilters: { ...filters, [filterName]: value }
+    });
   };
 
   const handlePreferenceChange = (preference) => {
+    const newPreferences = {
+      ...filters.preferences,
+      [preference]: !filters.preferences[preference]
+    };
+    
     setFilters({
       ...filters,
-      preferences: {
-        ...filters.preferences,
-        [preference]: !filters.preferences[preference]
-      }
+      preferences: newPreferences
+    });
+    
+    // Track preference change
+    searchAnalytics.trackFilter({
+      filterType: 'preference',
+      preference: preference,
+      value: !filters.preferences[preference],
+      allPreferences: newPreferences
     });
   };
 
@@ -221,6 +276,20 @@ const RideMatching = () => {
   };
 
   const handleBookRide = (ride) => {
+    // Track ride click with position
+    const position = filteredRides.findIndex(r => r.id === ride.id) + 1;
+    searchAnalytics.trackRideClick({
+      ...ride,
+      position
+    });
+    
+    // Track engagement
+    searchAnalytics.trackEngagement('book_ride_clicked', {
+      rideId: ride.id,
+      price: ride.pricing?.total,
+      position
+    });
+    
     navigate('/bookings/wizard', { 
       state: { 
         ride,
