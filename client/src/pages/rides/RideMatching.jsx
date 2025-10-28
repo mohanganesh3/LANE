@@ -209,9 +209,22 @@ const RideMatching = () => {
   if (loading) {
     return (
       <div className="ride-matching">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Finding best rides for you...</p>
+        <div className="loading-container">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Finding best rides for you...</p>
+            <div className="loading-steps">
+              <div className="step completed">
+                <i className="fas fa-check"></i> Searching routes
+              </div>
+              <div className="step active">
+                <div className="step-spinner"></div> Matching preferences
+              </div>
+              <div className="step">
+                <i className="fas fa-circle"></i> Sorting results
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -397,7 +410,9 @@ const RideMatching = () => {
 
         <div className="rides-list">
           <div className="results-header">
-            <h2>{filteredRides.length} Rides Found</h2>
+            <h2>
+              {searching ? 'Searching...' : `${filteredRides.length} Rides Found`}
+            </h2>
             {compareList.length > 0 && (
               <div className="compare-info">
                 {compareList.length} selected for comparison
@@ -406,8 +421,37 @@ const RideMatching = () => {
             )}
           </div>
 
-          {filteredRides.length === 0 ? (
+          {searching ? (
+            // Skeleton Loaders
+            <div className="skeleton-container">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="ride-card-skeleton">
+                  <div className="skeleton-header">
+                    <div className="skeleton-avatar"></div>
+                    <div className="skeleton-text-group">
+                      <div className="skeleton-text skeleton-name"></div>
+                      <div className="skeleton-text skeleton-rating"></div>
+                    </div>
+                  </div>
+                  <div className="skeleton-route">
+                    <div className="skeleton-text skeleton-location"></div>
+                    <div className="skeleton-text skeleton-location"></div>
+                  </div>
+                  <div className="skeleton-details">
+                    <div className="skeleton-text skeleton-detail"></div>
+                    <div className="skeleton-text skeleton-detail"></div>
+                    <div className="skeleton-text skeleton-detail"></div>
+                  </div>
+                  <div className="skeleton-footer">
+                    <div className="skeleton-text skeleton-price"></div>
+                    <div className="skeleton-button"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredRides.length === 0 ? (
             <div className="no-rides">
+              <i className="fas fa-car"></i>
               <p>No rides match your filters. Try adjusting your search criteria.</p>
               <button onClick={() => navigate(-1)}>Modify Search</button>
             </div>
