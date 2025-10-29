@@ -261,7 +261,7 @@ const ReviewRating = () => {
             <h3>Share Your Experience</h3>
             <textarea
               className={`review-textarea ${errors.comment ? 'error' : ''}`}
-              placeholder="Tell us about your ride experience..."
+              placeholder="Tell us about your ride experience... (minimum 10 characters)"
               value={review.comment}
               onChange={(e) => {
                 setReview(prev => ({ ...prev, comment: e.target.value }));
@@ -274,7 +274,11 @@ const ReviewRating = () => {
                 }
               }}
               rows="5"
+              maxLength="500"
             />
+            <div className="character-count">
+              {review.comment.length}/500 characters
+            </div>
             {errors.comment && <span className="error-message">{errors.comment}</span>}
           </div>
 
