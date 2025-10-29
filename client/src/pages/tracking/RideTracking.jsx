@@ -47,6 +47,24 @@ const RideTracking = () => {
     return colors[status] || '#999';
   };
 
+  const getTimelineSteps = () => {
+    const steps = [
+      { key: 'pending', label: 'Booking Confirmed', icon: '✓' },
+      { key: 'accepted', label: 'Driver Assigned', icon: '👤' },
+      { key: 'in-progress', label: 'Ride Started', icon: '🚗' },
+      { key: 'completed', label: 'Ride Completed', icon: '🏁' }
+    ];
+
+    const statusOrder = ['pending', 'accepted', 'in-progress', 'completed'];
+    const currentIndex = statusOrder.indexOf(rideStatus);
+
+    return steps.map((step, index) => ({
+      ...step,
+      completed: index <= currentIndex,
+      active: index === currentIndex
+    }));
+  };
+
   if (loading) {
     return (
       <div className="tracking-loading">
@@ -82,6 +100,25 @@ const RideTracking = () => {
             style={{ backgroundColor: getStatusColor(rideStatus) }}
           >
             {rideStatus}
+          </div>
+        </div>
+
+        <div className="ride-timeline">
+          <h3>Ride Progress</h3>
+          <div className="timeline-steps">
+            {getTimelineSteps().map((step) => (
+              <div 
+                key={step.key} 
+                className={`timeline-step ${step.completed ? 'completed' : ''} ${step.active ? 'active' : ''}`}
+              >
+                <div className="step-marker">
+                  <span className="step-icon">{step.icon}</span>
+                </div>
+                <div className="step-content">
+                  <p className="step-label">{step.label}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
