@@ -10,6 +10,8 @@ const RideTracking = () => {
   const [rideStatus, setRideStatus] = useState('pending');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     fetchRideDetails();
@@ -63,6 +65,37 @@ const RideTracking = () => {
       completed: index <= currentIndex,
       active: index === currentIndex
     }));
+  };
+
+  const handleCancelRide = async () => {
+    setCancelling(true);
+    
+    try {
+      const response = await fetch(`/api/rides/${rideId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to cancel ride');
+      }
+
+      setRideStatus('cancelled');
+      setShowCancelModal(false);
+      
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
+      
+    } catch (err) {
+      console.error('Error cancelling ride:', err);
+      setError('Failed to cancel ride. Please try again.');
+    } finally {
+      setCancelling(false);
+    }
   };
 
   if (loading) {
@@ -172,6 +205,31 @@ const RideTracking = () => {
           </div>
         )}
       </div>
+
+      {showCancelModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Cancel Ride?</h3>
+            <p>Are you sure you want to cancel this ride?</p>
+            <div className="modal-actions">
+              <button 
+                onClick={() => setShowCancelModal(false)} 
+                className="btn-modal-secondary"
+                disabled={cancelling}
+              >
+                Keep Ride
+              </button>
+              <button 
+                onClick={handleCancelRide} 
+                className="btn-modal-danger"
+                disabled={cancelling}
+              >
+                {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
