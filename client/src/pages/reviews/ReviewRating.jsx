@@ -412,6 +412,10 @@ const ReviewRating = () => {
             <div className="success-icon">✓</div>
             <h2>Thank You!</h2>
             <p>Your review has been submitted successfully</p>
+            <div className="success-rating">
+              <StarRating rating={ratings.overall} size="large" readOnly={true} />
+            </div>
+            <p className="redirect-text">Redirecting to dashboard...</p>
           </div>
         </div>
       )}
