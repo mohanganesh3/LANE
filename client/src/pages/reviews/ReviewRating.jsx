@@ -73,6 +73,22 @@ const ReviewRating = () => {
       newErrors.overall = 'Please provide an overall rating';
     }
     
+    if (ratings.cleanliness === 0) {
+      newErrors.cleanliness = 'Please rate the cleanliness';
+    }
+    
+    if (ratings.punctuality === 0) {
+      newErrors.punctuality = 'Please rate the punctuality';
+    }
+    
+    if (ratings.driving === 0) {
+      newErrors.driving = 'Please rate the driving';
+    }
+    
+    if (ratings.behavior === 0) {
+      newErrors.behavior = 'Please rate the behavior';
+    }
+    
     if (!review.comment.trim()) {
       newErrors.comment = 'Please share your experience';
     } else if (review.comment.trim().length < 10) {
