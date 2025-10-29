@@ -122,6 +122,36 @@ const RideTracking = () => {
           </div>
         </div>
 
+        {rideData?.driver && (
+          <div className="driver-contact-card">
+            <h3>Your Driver</h3>
+            <div className="driver-details">
+              <img 
+                src={rideData.driver.profilePhoto || '/images/default-avatar.png'} 
+                alt={rideData.driver.name}
+                className="driver-photo"
+              />
+              <div className="driver-info">
+                <h4>{rideData.driver.name}</h4>
+                <div className="driver-rating">
+                  ⭐ {rideData.driver.rating || '4.5'}
+                </div>
+                <p className="vehicle-info">
+                  {rideData.vehicle?.make} {rideData.vehicle?.model}
+                </p>
+              </div>
+              <div className="driver-actions">
+                <a href={`tel:${rideData.driver.phone}`} className="btn-call">
+                  📞 Call
+                </a>
+                <button className="btn-message">
+                  💬 Message
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {rideData && (
           <div className="ride-info-card">
             <h3>Ride Details</h3>
