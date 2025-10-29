@@ -22,7 +22,8 @@ const ReviewRating = () => {
   
   const [review, setReview] = useState({
     comment: '',
-    wouldRecommend: null
+    wouldRecommend: null,
+    photos: []
   });
   
   const [errors, setErrors] = useState({});
@@ -64,6 +65,43 @@ const ReviewRating = () => {
         return newErrors;
       });
     }
+  };
+
+  const handlePhotoUpload = (e) => {
+    const files = Array.from(e.target.files);
+    
+    if (review.photos.length + files.length > 5) {
+      setErrors(prev => ({
+        ...prev,
+        photos: 'Maximum 5 photos allowed'
+      }));
+      return;
+    }
+    
+    const validFiles = files.filter(file => {
+      const isValidType = file.type.startsWith('image/');
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
+      return isValidType && isValidSize;
+    });
+    
+    if (validFiles.length !== files.length) {
+      setErrors(prev => ({
+        ...prev,
+        photos: 'Some files were invalid (must be images under 5MB)'
+      }));
+    }
+    
+    setReview(prev => ({
+      ...prev,
+      photos: [...prev.photos, ...validFiles]
+    }));
+  };
+
+  const removePhoto = (index) => {
+    setReview(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
+    }));
   };
 
   const validateForm = () => {
@@ -311,6 +349,42 @@ const ReviewRating = () => {
               {review.comment.length}/500 characters
             </div>
             {errors.comment && <span className="error-message">{errors.comment}</span>}
+          </div>
+
+          <div className="photo-upload-section">
+            <h3>Add Photos (Optional)</h3>
+            <div className="photo-upload-area">
+              {review.photos.length < 5 && (
+                <label className="upload-button">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <span>📸 Add Photos</span>
+                </label>
+              )}
+              
+              {review.photos.length > 0 && (
+                <div className="photo-previews">
+                  {review.photos.map((photo, index) => (
+                    <div key={index} className="photo-preview">
+                      <img src={URL.createObjectURL(photo)} alt={`Preview ${index + 1}`} />
+                      <button
+                        type="button"
+                        className="remove-photo"
+                        onClick={() => removePhoto(index)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {errors.photos && <span className="error-message">{errors.photos}</span>}
           </div>
 
           <div className="form-actions">
