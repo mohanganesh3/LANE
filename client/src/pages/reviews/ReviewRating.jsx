@@ -16,7 +16,8 @@ const ReviewRating = () => {
     overall: 0,
     cleanliness: 0,
     punctuality: 0,
-    driving: 0
+    driving: 0,
+    behavior: 0
   });
   
   const [review, setReview] = useState({
@@ -252,6 +253,20 @@ const ReviewRating = () => {
               <StarRating
                 rating={ratings.driving}
                 onRatingChange={(value) => handleRatingChange('driving', value)}
+                size="medium"
+              />
+            </div>
+
+            <div className="rating-item">
+              <div className="rating-label">
+                <span className="icon">😊</span>
+                <div>
+                  <h4>Behavior</h4>
+                </div>
+              </div>
+              <StarRating
+                rating={ratings.behavior}
+                onRatingChange={(value) => handleRatingChange('behavior', value)}
                 size="medium"
               />
             </div>
