@@ -16,6 +16,13 @@ const RideTracking = () => {
 
   useEffect(() => {
     fetchRideDetails();
+    
+    // Poll for ride updates every 10 seconds
+    const intervalId = setInterval(() => {
+      fetchRideDetails();
+    }, 10000);
+    
+    return () => clearInterval(intervalId);
   }, [rideId]);
 
   const fetchRideDetails = async () => {
@@ -204,6 +211,17 @@ const RideTracking = () => {
                 <span className="value">{rideData.driver?.name}</span>
               </div>
             </div>
+          </div>
+        )}
+
+        {['pending', 'accepted'].includes(rideStatus) && (
+          <div className="action-section">
+            <button 
+              onClick={() => setShowCancelModal(true)} 
+              className="btn-cancel-ride"
+            >
+              Cancel Ride
+            </button>
           </div>
         )}
       </div>
