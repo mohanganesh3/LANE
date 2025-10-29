@@ -12,6 +12,7 @@ const RideTracking = () => {
   const [error, setError] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
 
   useEffect(() => {
     fetchRideDetails();
@@ -76,7 +77,8 @@ const RideTracking = () => {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ reason: cancelReason })
       });
 
       if (!response.ok) {
@@ -210,7 +212,19 @@ const RideTracking = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Cancel Ride?</h3>
-            <p>Are you sure you want to cancel this ride?</p>
+            <p>Please select a reason for cancellation:</p>
+            <select 
+              className="cancel-reason-select"
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+            >
+              <option value="">Select a reason...</option>
+              <option value="driver-delay">Driver is taking too long</option>
+              <option value="wrong-location">Wrong pickup location</option>
+              <option value="found-alternative">Found alternative ride</option>
+              <option value="emergency">Emergency</option>
+              <option value="other">Other</option>
+            </select>
             <div className="modal-actions">
               <button 
                 onClick={() => setShowCancelModal(false)} 
@@ -222,7 +236,7 @@ const RideTracking = () => {
               <button 
                 onClick={handleCancelRide} 
                 className="btn-modal-danger"
-                disabled={cancelling}
+                disabled={cancelling || !cancelReason}
               >
                 {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
               </button>
