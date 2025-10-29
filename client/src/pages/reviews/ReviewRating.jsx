@@ -147,18 +147,22 @@ const ReviewRating = () => {
     setSubmitting(true);
     
     try {
+      const formData = new FormData();
+      formData.append('rideId', rideId);
+      formData.append('ratings', JSON.stringify(ratings));
+      formData.append('comment', review.comment);
+      formData.append('wouldRecommend', review.wouldRecommend);
+      
+      review.photos.forEach((photo) => {
+        formData.append('photos', photo);
+      });
+      
       const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({
-          rideId,
-          ratings,
-          comment: review.comment,
-          wouldRecommend: review.wouldRecommend
-        })
+        body: formData
       });
       
       if (!response.ok) {
