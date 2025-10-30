@@ -1,0 +1,257 @@
+.map-controls-container {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.map-controls-container > * {
+  pointer-events: auto;
+}
+
+/* Control Groups */
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.control-btn {
+  width: 44px;
+  height: 44px;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.control-group .control-btn:last-child {
+  border-bottom: none;
+}
+
+.control-btn:hover {
+  background: #f9fafb;
+  color: #111827;
+}
+
+.control-btn:active {
+  background: #f3f4f6;
+  transform: scale(0.95);
+}
+
+.control-btn svg {
+  stroke-width: 2;
+}
+
+/* Active State */
+.control-btn.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.control-btn.active:hover {
+  background: #2563eb;
+}
+
+/* Special Buttons */
+.compass-btn svg polygon {
+  fill: #ef4444;
+}
+
+.map-type-btn {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Map Legend */
+.map-legend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+}
+
+.legend-title {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 13px;
+  color: #374151;
+}
+
+/* Map Scale */
+.map-scale {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.scale-bar {
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    #000 0%,
+    #000 25%,
+    #fff 25%,
+    #fff 50%,
+    #000 50%,
+    #000 75%,
+    #fff 75%,
+    #fff 100%
+  );
+  border: 1px solid #000;
+  border-radius: 2px;
+}
+
+.scale-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .map-controls-container {
+    right: 8px;
+    top: 8px;
+    gap: 8px;
+  }
+
+  .control-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .map-legend {
+    bottom: 15px;
+    left: 15px;
+    padding: 12px;
+    min-width: 150px;
+  }
+
+  .legend-title {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .legend-item {
+    gap: 8px;
+  }
+
+  .legend-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .legend-label {
+    font-size: 12px;
+  }
+
+  .map-scale {
+    bottom: 15px;
+    right: 15px;
+    padding: 6px 10px;
+  }
+
+  .scale-bar {
+    width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .control-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .map-legend {
+    left: 10px;
+    bottom: 10px;
+    padding: 10px;
+    min-width: 130px;
+  }
+
+  .map-scale {
+    right: 10px;
+    bottom: 10px;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .control-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .control-btn:hover {
+    background: white;
+    color: #374151;
+  }
+
+  .control-btn.active:hover {
+    background: #3b82f6;
+    color: white;
+  }
+}
