@@ -220,6 +220,46 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.theme-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.theme-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6b7280;
+}
+
+.theme-option:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.theme-option.active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.theme-option svg {
+  stroke-width: 2;
+}
+
+.theme-option span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .settings-actions {
   display: flex;
   gap: 12px;
