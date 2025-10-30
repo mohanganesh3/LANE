@@ -60,12 +60,60 @@ const Settings = () => {
     try {
       setSaving(true);
       await apiService.put('/user/settings', settings);
+      
+      // Apply theme immediately
+      applyTheme(settings.preferences.theme);
+      
+      // Apply language
+      applyLanguage(settings.preferences.language);
+      
       showMessage('success', 'Settings saved successfully');
     } catch (error) {
       console.error('Failed to save settings:', error);
-      showMessage('error', 'Failed to save settings');
+      showMessage('error', error.response?.data?.message || 'Failed to save settings');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const applyTheme = (theme) => {
+    const root = document.documentElement;
+    
+    if (theme === 'auto') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    } else {
+      root.setAttribute('data-theme', theme);
+    }
+    
+    localStorage.setItem('theme', theme);
+  };
+
+  const applyLanguage = (language) => {
+    document.documentElement.setAttribute('lang', language);
+    localStorage.setItem('language', language);
+  };
+
+  const handleReset = () => {
+    if (window.confirm('Are you sure you want to reset all settings to default?')) {
+      fetchSettings();
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      const confirmText = prompt('Type "DELETE" to confirm account deletion:');
+      if (confirmText === 'DELETE') {
+        try {
+          await apiService.delete('/user/account');
+          showMessage('success', 'Account deleted successfully. Redirecting...');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        } catch (error) {
+          showMessage('error', 'Failed to delete account');
+        }
+      }
     }
   };
 
@@ -438,15 +486,54 @@ const Settings = () => {
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? 'Saving...' : 'Save Changes'}
+            {saving ? (
+              <>
+                <span className="btn-spinner"></span>
+                Saving...
+              </>
+            ) : (
+              'Save Changes'
+            )}
           </button>
           <button
             className="btn-cancel"
-            onClick={fetchSettings}
+            onClick={handleReset}
             disabled={saving}
           >
             Reset
           </button>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="settings-section danger-zone">
+          <div className="section-header">
+            <div className="section-icon danger">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div>
+              <h2>Danger Zone</h2>
+              <p>Irreversible and destructive actions</p>
+            </div>
+          </div>
+          
+          <div className="settings-items">
+            <div className="setting-item danger-item">
+              <div className="setting-info">
+                <label>Delete Account</label>
+                <span>Permanently delete your account and all data</span>
+              </div>
+              <button
+                className="btn-danger"
+                onClick={handleDeleteAccount}
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
