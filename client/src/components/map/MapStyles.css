@@ -1,0 +1,430 @@
+/* ============================================
+   LANE React - Map Component Styles
+   Complete styling for all map-related components
+   ============================================ */
+
+/* Global Map Styles */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: #f0f0f0;
+}
+
+.map-container.fullscreen {
+  border-radius: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+/* Leaflet Container Overrides */
+.map-container .leaflet-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f7f9fb;
+}
+
+.map-container .leaflet-tile-pane {
+  filter: grayscale(0%) contrast(105%) brightness(100%);
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .map-container.dark-mode .leaflet-tile-pane {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  }
+
+  .map-container.dark-mode .leaflet-control {
+    filter: invert(100%) hue-rotate(180deg);
+  }
+}
+
+/* Zoom Controls Styling */
+.map-container .leaflet-control-zoom {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-container .leaflet-control-zoom a {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 20px;
+  border: none;
+  border-radius: 0;
+  color: #374151;
+  font-weight: 600;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.map-container .leaflet-control-zoom a:first-child {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.map-container .leaflet-control-zoom a:hover {
+  background: #f9fafb;
+  color: #111827;
+}
+
+.map-container .leaflet-control-zoom a:active {
+  background: #f3f4f6;
+}
+
+.map-container .leaflet-control-zoom-in {
+  border-radius: 8px 8px 0 0;
+}
+
+.map-container .leaflet-control-zoom-out {
+  border-radius: 0 0 8px 8px;
+}
+
+/* Attribution Styling */
+.map-container .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px 0 0 0;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.map-container .leaflet-control-attribution a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.map-container .leaflet-control-attribution a:hover {
+  text-decoration: underline;
+}
+
+/* Popup Styling */
+.map-container .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.map-container .leaflet-popup-content {
+  margin: 16px;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #374151;
+}
+
+.map-container .leaflet-popup-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.map-container .leaflet-popup-content p {
+  margin: 4px 0;
+  color: #6b7280;
+}
+
+.map-container .leaflet-popup-tip {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-container .leaflet-popup-close-button {
+  width: 28px;
+  height: 28px;
+  font-size: 24px;
+  color: #9ca3af;
+  padding: 0;
+  top: 8px;
+  right: 8px;
+}
+
+.map-container .leaflet-popup-close-button:hover {
+  color: #374151;
+  background: #f3f4f6;
+  border-radius: 6px;
+}
+
+/* Tooltip Styling */
+.map-container .leaflet-tooltip {
+  background: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+
+.map-container .leaflet-tooltip-top:before,
+.map-container .leaflet-tooltip-bottom:before,
+.map-container .leaflet-tooltip-left:before,
+.map-container .leaflet-tooltip-right:before {
+  border-color: #1f2937;
+}
+
+/* Custom Marker Styles */
+.driver-marker-icon,
+.passenger-marker-icon,
+.location-marker-icon,
+.pickup-marker-icon,
+.dropoff-marker-icon,
+.waypoint-marker-container {
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+.waypoint-marker {
+  width: 28px;
+  height: 28px;
+  background: #3b82f6;
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Distance Marker Labels */
+.distance-marker-label {
+  background: white !important;
+  border: 2px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Polyline Animations */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animated-route {
+  stroke-dasharray: 10, 5;
+  animation: dash 1s linear infinite;
+}
+
+/* Loading State */
+.map-container.loading {
+  position: relative;
+}
+
+.map-container.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.map-container.loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  z-index: 10001;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Error State */
+.map-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.map-error-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: #ef4444;
+}
+
+.map-error-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.map-error-message {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 16px 0;
+}
+
+.map-error-retry {
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.map-error-retry:hover {
+  background: #2563eb;
+}
+
+/* Responsive Map Containers */
+@media (max-width: 1024px) {
+  .map-container {
+    border-radius: 8px;
+  }
+
+  .map-container .leaflet-popup-content-wrapper {
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .map-container {
+    border-radius: 0;
+  }
+
+  .map-container .leaflet-control-zoom {
+    margin: 10px;
+  }
+
+  .map-container .leaflet-control-zoom a {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+  }
+
+  .map-container .leaflet-popup-content-wrapper {
+    max-width: 250px;
+  }
+
+  .map-container .leaflet-popup-content {
+    margin: 12px;
+    font-size: 13px;
+  }
+
+  .waypoint-marker {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-container .leaflet-control-zoom {
+    margin: 8px;
+  }
+
+  .map-container .leaflet-control-zoom a {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    font-size: 16px;
+  }
+
+  .map-container .leaflet-popup-content {
+    margin: 10px;
+  }
+
+  .map-container .leaflet-control-attribution {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .map-container .leaflet-control-zoom,
+  .map-container .leaflet-control-attribution,
+  .map-controls-container {
+    display: none !important;
+  }
+
+  .map-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* Accessibility Enhancements */
+.map-container:focus {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.map-container .leaflet-interactive:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .map-container .leaflet-control-zoom a {
+    border: 2px solid #000;
+  }
+
+  .map-container .leaflet-popup-content-wrapper {
+    border: 2px solid #000;
+  }
+
+  .waypoint-marker {
+    border-width: 4px;
+  }
+}
+
+/* Reduce Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .map-container,
+  .map-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
