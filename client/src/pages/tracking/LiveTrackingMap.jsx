@@ -1,11 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MapContainer from '../../components/map/MapContainer';
 import { 
   calculateDistance, 
   calculateBounds,
   formatDistance,
+  calculateBearing,
   MAP_CONFIG 
 } from '../../utils/mapUtils';
+import { 
+  createDriverMarker, 
+  createPassengerMarker,
+  animateMarkerTo 
+} from '../../components/map/MapMarkers';
 import { useSocket } from '../../contexts/SocketContext';
 import './LiveTrackingMap.css';
 
@@ -30,6 +36,12 @@ const LiveTrackingMap = ({
   const [tracking, setTracking] = useState(true);
   const [eta, setEta] = useState(null);
   const [distanceRemaining, setDistanceRemaining] = useState(null);
+  const [driverSpeed, setDriverSpeed] = useState(0);
+  const [driverHeading, setDriverHeading] = useState(0);
+  const [lastUpdateTime, setLastUpdateTime] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState('connecting');
+  const driverMarkerRef = useRef(null);
+  const passengerMarkerRef = useRef(null);
 
   // Initialize map center based on locations
   useEffect(() => {
@@ -45,19 +57,64 @@ const LiveTrackingMap = ({
   useEffect(() => {
     if (!socket || !rideId) return;
 
+    // Connection status handlers
+    const handleConnect = () => {
+      console.log('Socket connected for ride tracking');
+      setConnectionStatus('connected');
+    };
+
+    const handleDisconnect = () => {
+      console.log('Socket disconnected');
+      setConnectionStatus('disconnected');
+    };
+
+    const handleConnectError = (error) => {
+      console.error('Socket connection error:', error);
+      setConnectionStatus('error');
+    };
+
     // Subscribe to driver location updates
     const handleDriverLocationUpdate = (data) => {
       if (data.rideId === rideId) {
-        setLiveDriverLocation({
+        console.log('Driver location update:', data);
+        
+        const newLocation = {
           lat: data.latitude,
           lng: data.longitude,
-          heading: data.heading,
-          speed: data.speed
-        });
+          heading: data.heading || 0,
+          speed: data.speed || 0
+        };
+
+        // Animate marker to new position
+        if (driverMarkerRef.current && liveDriverLocation) {
+          animateMarkerTo(
+            driverMarkerRef.current,
+            newLocation,
+            1000 // 1 second animation
+          );
+        }
+
+        setLiveDriverLocation(newLocation);
+        
+        // Update heading and speed
+        if (data.heading !== undefined) {
+          setDriverHeading(data.heading);
+        } else if (liveDriverLocation) {
+          // Calculate heading from previous position
+          const bearing = calculateBearing(liveDriverLocation, newLocation);
+          setDriverHeading(bearing);
+        }
+        
+        if (data.speed !== undefined) setDriverSpeed(data.speed);
 
         // Update ETA and distance
         if (data.eta) setEta(data.eta);
-        if (data.distanceRemaining) setDistanceRemaining(data.distanceRemaining);
+        if (data.distanceRemaining !== undefined) {
+          setDistanceRemaining(data.distanceRemaining);
+        }
+
+        // Update timestamp
+        setLastUpdateTime(new Date());
 
         // Auto-center map if tracking is enabled
         if (tracking) {
@@ -69,26 +126,74 @@ const LiveTrackingMap = ({
     // Subscribe to passenger location updates
     const handlePassengerLocationUpdate = (data) => {
       if (data.rideId === rideId) {
-        setLivePassengerLocation({
+        console.log('Passenger location update:', data);
+        
+        const newLocation = {
           lat: data.latitude,
           lng: data.longitude
-        });
+        };
+
+        // Animate marker to new position
+        if (passengerMarkerRef.current && livePassengerLocation) {
+          animateMarkerTo(
+            passengerMarkerRef.current,
+            newLocation,
+            1000
+          );
+        }
+
+        setLivePassengerLocation(newLocation);
       }
     };
 
+    // Subscribe to ETA updates
+    const handleEtaUpdate = (data) => {
+      if (data.rideId === rideId) {
+        console.log('ETA update:', data);
+        setEta(data.eta);
+        if (data.distance !== undefined) {
+          setDistanceRemaining(data.distance);
+        }
+      }
+    };
+
+    // Subscribe to ride status updates
+    const handleRideStatusUpdate = (data) => {
+      if (data.rideId === rideId) {
+        console.log('Ride status update:', data);
+        // Handle status changes (arrived, started, completed, etc.)
+      }
+    };
+
+    // Register event listeners
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('connect_error', handleConnectError);
     socket.on('driver:location:update', handleDriverLocationUpdate);
     socket.on('passenger:location:update', handlePassengerLocationUpdate);
+    socket.on('ride:eta:update', handleEtaUpdate);
+    socket.on('ride:status:update', handleRideStatusUpdate);
 
     // Join ride room for updates
     socket.emit('ride:join', { rideId });
+    console.log('Joined ride room:', rideId);
+
+    // Request initial location update
+    socket.emit('ride:request:location', { rideId });
 
     // Cleanup
     return () => {
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('connect_error', handleConnectError);
       socket.off('driver:location:update', handleDriverLocationUpdate);
       socket.off('passenger:location:update', handlePassengerLocationUpdate);
+      socket.off('ride:eta:update', handleEtaUpdate);
+      socket.off('ride:status:update', handleRideStatusUpdate);
       socket.emit('ride:leave', { rideId });
+      console.log('Left ride room:', rideId);
     };
-  }, [socket, rideId, tracking]);
+  }, [socket, rideId, tracking, liveDriverLocation, livePassengerLocation]);
 
   // Calculate distance from driver to destination
   useEffect(() => {
@@ -238,6 +343,17 @@ const LiveTrackingMap = ({
 
       {showControls && (
         <div className="map-controls">
+          {/* Connection Status Indicator */}
+          <div className={`connection-status ${connectionStatus}`}>
+            <div className="status-dot" />
+            <span className="status-text">
+              {connectionStatus === 'connected' && 'Live'}
+              {connectionStatus === 'connecting' && 'Connecting...'}
+              {connectionStatus === 'disconnected' && 'Offline'}
+              {connectionStatus === 'error' && 'Error'}
+            </span>
+          </div>
+
           <button 
             onClick={handleCenterOnDriver}
             className={`map-control-btn ${tracking ? 'active' : ''}`}
@@ -262,7 +378,7 @@ const LiveTrackingMap = ({
         </div>
       )}
 
-      {(eta || distanceRemaining) && (
+      {(eta || distanceRemaining || driverSpeed > 0) && (
         <div className="tracking-info">
           {distanceRemaining && (
             <div className="info-item">
@@ -274,6 +390,17 @@ const LiveTrackingMap = ({
             <div className="info-item">
               <span className="info-label">ETA</span>
               <span className="info-value">{eta} min</span>
+            </div>
+          )}
+          {driverSpeed > 0 && (
+            <div className="info-item">
+              <span className="info-label">Speed</span>
+              <span className="info-value">{Math.round(driverSpeed)} km/h</span>
+            </div>
+          )}
+          {lastUpdateTime && (
+            <div className="last-update">
+              Updated {Math.round((new Date() - lastUpdateTime) / 1000)}s ago
             </div>
           )}
         </div>
