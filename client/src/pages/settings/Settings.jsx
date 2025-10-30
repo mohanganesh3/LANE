@@ -292,6 +292,87 @@ const Settings = () => {
               </div>
             </div>
           </div>
+
+          {/* Preferences Section */}
+          <div className="settings-section">
+            <div className="section-header">
+              <div className="section-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Preferences</h2>
+                <p>Customize your app experience</p>
+              </div>
+            </div>
+            
+            <div className="settings-items">
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Language</label>
+                  <span>Choose your preferred language</span>
+                </div>
+                <select
+                  value={settings.preferences.language}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    preferences: { ...settings.preferences, language: e.target.value }
+                  })}
+                  className="select-input"
+                >
+                  <option value="en">English</option>
+                  <option value="hi">हिन्दी (Hindi)</option>
+                  <option value="ta">தமிழ் (Tamil)</option>
+                  <option value="te">తెలుగు (Telugu)</option>
+                  <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                  <option value="ml">മലയാളം (Malayalam)</option>
+                  <option value="mr">मराठी (Marathi)</option>
+                  <option value="bn">বাংলা (Bengali)</option>
+                  <option value="gu">ગુજરાતી (Gujarati)</option>
+                </select>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Currency</label>
+                  <span>Display prices in your currency</span>
+                </div>
+                <select
+                  value={settings.preferences.currency}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    preferences: { ...settings.preferences, currency: e.target.value }
+                  })}
+                  className="select-input"
+                >
+                  <option value="INR">₹ INR (Indian Rupee)</option>
+                  <option value="USD">$ USD (US Dollar)</option>
+                  <option value="EUR">€ EUR (Euro)</option>
+                  <option value="GBP">£ GBP (British Pound)</option>
+                </select>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Distance Unit</label>
+                  <span>Choose how to display distances</span>
+                </div>
+                <select
+                  value={settings.preferences.distanceUnit}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    preferences: { ...settings.preferences, distanceUnit: e.target.value }
+                  })}
+                  className="select-input"
+                >
+                  <option value="km">Kilometers</option>
+                  <option value="mi">Miles</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="settings-actions">
