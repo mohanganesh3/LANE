@@ -1,0 +1,165 @@
+.live-tracking-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+}
+
+.tracking-map-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Map Controls */
+.map-controls {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-control-btn {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.map-control-btn:hover {
+  background: #f3f4f6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.map-control-btn.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.map-control-btn svg {
+  stroke-width: 2;
+}
+
+/* Tracking Info Panel */
+.tracking-info {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 20px;
+  display: flex;
+  gap: 24px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 18px;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Map Popup Styles */
+.map-popup h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.map-popup p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .live-tracking-map {
+    min-height: 400px;
+  }
+
+  .map-controls {
+    right: 8px;
+    top: 8px;
+  }
+
+  .map-control-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .tracking-info {
+    bottom: 15px;
+    padding: 10px 16px;
+    gap: 16px;
+  }
+
+  .info-label {
+    font-size: 11px;
+  }
+
+  .info-value {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tracking-info {
+    flex-direction: row;
+    padding: 8px 12px;
+    gap: 12px;
+  }
+
+  .info-item {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .info-label::after {
+    content: ':';
+  }
+
+  .info-value {
+    font-size: 14px;
+  }
+}
