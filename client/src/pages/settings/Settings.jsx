@@ -220,6 +220,78 @@ const Settings = () => {
               </div>
             </div>
           </div>
+
+          {/* Privacy Section */}
+          <div className="settings-section">
+            <div className="section-header">
+              <div className="section-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Privacy</h2>
+                <p>Control your privacy and data settings</p>
+              </div>
+            </div>
+            
+            <div className="settings-items">
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Profile Visibility</label>
+                  <span>Choose who can see your profile</span>
+                </div>
+                <select
+                  value={settings.privacy.profileVisibility}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    privacy: { ...settings.privacy, profileVisibility: e.target.value }
+                  })}
+                  className="select-input"
+                >
+                  <option value="public">Public</option>
+                  <option value="friends">Friends Only</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Show Phone Number</label>
+                  <span>Display phone number on your profile</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.privacy.showPhoneNumber}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      privacy: { ...settings.privacy, showPhoneNumber: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Show Email Address</label>
+                  <span>Display email on your public profile</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.privacy.showEmail}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      privacy: { ...settings.privacy, showEmail: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="settings-actions">
