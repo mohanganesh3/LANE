@@ -1,0 +1,246 @@
+import React, { useState, useEffect } from 'react';
+import { apiService } from '../../services/apiService';
+import './Settings.css';
+
+/**
+ * Settings Page
+ * User settings and preferences management
+ */
+const Settings = () => {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState({
+    notifications: {
+      email: true,
+      sms: true,
+      push: true,
+      bookingUpdates: true,
+      promotions: false,
+      newsletters: false
+    },
+    privacy: {
+      profileVisibility: 'public',
+      showPhoneNumber: false,
+      showEmail: false
+    },
+    preferences: {
+      language: 'en',
+      theme: 'light',
+      currency: 'INR',
+      distanceUnit: 'km'
+    }
+  });
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.get('/user/settings');
+      if (response.data) {
+        setSettings(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+      showMessage('error', 'Failed to load settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      await apiService.put('/user/settings', settings);
+      showMessage('success', 'Settings saved successfully');
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      showMessage('error', 'Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="settings-page">
+        <div className="settings-loading">
+          <div className="spinner" />
+          <p>Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="settings-page">
+      <div className="settings-container">
+        <div className="settings-header">
+          <h1>Settings</h1>
+          <p>Manage your account preferences and privacy</p>
+        </div>
+
+        {message.text && (
+          <div className={`settings-message ${message.type}`}>
+            {message.text}
+          </div>
+        )}
+
+        <div className="settings-sections">
+          {/* Notifications Section */}
+          <div className="settings-section">
+            <div className="section-header">
+              <div className="section-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Notifications</h2>
+                <p>Choose how you want to be notified</p>
+              </div>
+            </div>
+            
+            <div className="settings-items">
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Email Notifications</label>
+                  <span>Receive updates via email</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.notifications.email}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      notifications: { ...settings.notifications, email: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>SMS Notifications</label>
+                  <span>Get text messages for important updates</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.notifications.sms}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      notifications: { ...settings.notifications, sms: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Push Notifications</label>
+                  <span>Receive push notifications on your device</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.notifications.push}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      notifications: { ...settings.notifications, push: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Booking Updates</label>
+                  <span>Get notified about ride status changes</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.notifications.bookingUpdates}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      notifications: { ...settings.notifications, bookingUpdates: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Promotions</label>
+                  <span>Receive promotional offers and discounts</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.notifications.promotions}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      notifications: { ...settings.notifications, promotions: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label>Newsletters</label>
+                  <span>Subscribe to our newsletter</span>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={settings.notifications.newsletters}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      notifications: { ...settings.notifications, newsletters: e.target.checked }
+                    })}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="settings-actions">
+          <button
+            className="btn-save"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+          <button
+            className="btn-cancel"
+            onClick={fetchSettings}
+            disabled={saving}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Settings;
