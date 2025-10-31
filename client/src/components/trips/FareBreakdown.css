@@ -1,0 +1,507 @@
+/* Fare Breakdown Styles */
+.fare-breakdown-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fare-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.fare-header h3 {
+  font-size: 1.125rem;
+  color: #1f2937;
+  font-weight: 600;
+  margin: 0;
+}
+
+.toggle-details {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.toggle-details:hover {
+  background: #e5e7eb;
+}
+
+.toggle-details svg {
+  transition: transform 0.3s ease;
+}
+
+/* Fare Details */
+.fare-details {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+.fare-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.fare-section:last-child {
+  border-bottom: none;
+}
+
+.fare-section h4 {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.fare-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+}
+
+.fare-item-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.fare-item-label > span:first-child {
+  font-size: 0.9375rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.fare-item-info {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.fare-item-info.surge {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.fare-item-info.success {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.fare-item-value {
+  font-size: 0.9375rem;
+  color: #1f2937;
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+.fare-item-value.surge {
+  color: #ef4444;
+}
+
+.fare-item-value.discount {
+  color: #10b981;
+}
+
+/* Discounts Section */
+.fare-section.discounts {
+  background: #f0fdf4;
+}
+
+/* Subtotal */
+.fare-subtotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #f9fafb;
+  font-size: 0.9375rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* Total */
+.fare-total {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.total-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.payment-method {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.total-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+}
+
+/* Savings Badge */
+.savings-badge {
+  margin: 1.5rem;
+  padding: 1rem;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  color: #166534;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.savings-badge svg {
+  flex-shrink: 0;
+  color: #22c55e;
+}
+
+/* Rating Prompt Styles */
+.rating-prompt-container {
+  padding: 2rem;
+}
+
+.rating-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rating-header {
+  text-align: center;
+  padding: 2rem 2rem 1rem;
+  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+}
+
+.rating-header h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.rating-header p {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Driver Info Compact */
+.driver-info-compact {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.driver-avatar-small {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.driver-avatar-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder-small {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.driver-details-small {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.driver-name-small {
+  font-size: 1rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.vehicle-info-small {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Rating Form */
+.rating-form {
+  padding: 2rem;
+}
+
+.star-rating-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: all 0.2s;
+}
+
+.star svg {
+  color: #d1d5db;
+  transition: all 0.2s;
+}
+
+.star.active svg,
+.star:hover svg {
+  color: #fbbf24;
+  transform: scale(1.1);
+}
+
+.rating-text {
+  font-size: 1.125rem;
+  color: #667eea;
+  font-weight: 600;
+  margin: 0;
+  min-height: 1.5rem;
+}
+
+/* Feedback Tags */
+.feedback-tags-section {
+  margin-bottom: 1.5rem;
+}
+
+.feedback-tags-section label {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.feedback-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.feedback-tag {
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.feedback-tag:hover {
+  background: #e5e7eb;
+}
+
+.feedback-tag.selected {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+/* Written Feedback */
+.feedback-section {
+  margin-bottom: 1.5rem;
+}
+
+.feedback-section label {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.feedback-section textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.feedback-section textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+/* Error Message */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.error-message svg {
+  flex-shrink: 0;
+}
+
+/* Rating Actions */
+.rating-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-skip,
+.btn-submit-rating {
+  flex: 1;
+  padding: 0.875rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-skip {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.btn-skip:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+.btn-submit-rating {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-submit-rating:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit-rating:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Rating Info */
+.rating-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.rating-info svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.rating-info p {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .rating-actions {
+    flex-direction: column;
+  }
+
+  .stars {
+    gap: 0.25rem;
+  }
+
+  .star svg {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1,0 +1,289 @@
+/* Invoice Download Styles */
+.invoice-download-container {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-download-invoice,
+.btn-email-invoice {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-download-invoice {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-download-invoice:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-email-invoice {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-email-invoice:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+.btn-download-invoice:disabled,
+.btn-email-invoice:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.invoice-error {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 0.875rem;
+}
+
+.invoice-error svg {
+  flex-shrink: 0;
+}
+
+/* Trip Share Styles */
+.trip-share-container {
+  padding: 1.5rem;
+}
+
+.btn-share-trip {
+  width: 100%;
+  padding: 1rem;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-share-trip:hover {
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+/* Share Menu */
+.share-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.share-menu {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.share-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.share-menu-header h3 {
+  font-size: 1.25rem;
+  color: #1f2937;
+  margin: 0;
+  font-weight: 600;
+}
+
+.close-share-menu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.close-share-menu:hover {
+  background: #f3f4f6;
+}
+
+.share-options {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.share-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.share-option:hover {
+  background: #f9fafb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-option.whatsapp .share-icon {
+  background: #25d366;
+  color: white;
+}
+
+.share-option.twitter .share-icon {
+  background: #1da1f2;
+  color: white;
+}
+
+.share-option.facebook .share-icon {
+  background: #1877f2;
+  color: white;
+}
+
+.share-option.email .share-icon {
+  background: #ea4335;
+  color: white;
+}
+
+.share-option.sms .share-icon {
+  background: #10b981;
+  color: white;
+}
+
+.share-option.copy-link .share-icon {
+  background: #6b7280;
+  color: white;
+}
+
+.share-option span {
+  font-size: 0.8125rem;
+  color: #1f2937;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Trip Summary Styles */
+.trip-summary-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.trip-summary-container h3 {
+  font-size: 1.125rem;
+  color: #1f2937;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .invoice-actions {
+    flex-direction: column;
+  }
+
+  .share-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .share-menu {
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+@media (min-width: 641px) {
+  .share-menu-overlay {
+    align-items: center;
+  }
+
+  .share-menu {
+    border-radius: 16px;
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
