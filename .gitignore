@@ -60,6 +60,21 @@ coverage/
 .npm/
 .eslintcache
 
-# Scripts
-fix-*.sh
+# Scripts and migration files
+*.sh
+
+# Migration documentation (keep locally only)
 DETAILED_MIGRATION_SCHEDULE.md
+MIGRATION_PLAN.md
+REACT_MIGRATION_TIMELINE.md
+
+# Test and utility scripts (keep locally only)
+clean-emergency-docs.js
+clear-active-emergencies.js
+create-test-booking.js
+fix-bookings.js
+fix-emergency-index.js
+generate-pdf-puppeteer.js
+generate-pdf.js
+reset-emergency-indexes.js
+seed.js
