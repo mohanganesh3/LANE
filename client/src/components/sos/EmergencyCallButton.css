@@ -1,0 +1,282 @@
+/* EmergencyCallButton.css */
+
+.emergency-call-button {
+  position: relative;
+  width: 100%;
+}
+
+.call-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.call-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.call-button:active {
+  transform: translateY(0);
+}
+
+.button-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.button-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.button-label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.button-number {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.button-action {
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.call-button:hover .button-action {
+  opacity: 1;
+}
+
+.button-description {
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.button-description p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Emergency Call Panel */
+.emergency-call-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.panel-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.panel-header h3 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.panel-header p {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.call-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.panel-footer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.footer-warning {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+}
+
+.footer-warning svg {
+  flex-shrink: 0;
+  color: #f59e0b;
+  margin-top: 0.125rem;
+}
+
+.footer-warning p {
+  font-size: 0.875rem;
+  color: #78350f;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Floating Emergency Button */
+.floating-emergency-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9000;
+}
+
+.floating-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.floating-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 30px rgba(239, 68, 68, 0.5);
+}
+
+.floating-button:active {
+  transform: scale(0.95);
+}
+
+.floating-button svg {
+  transition: transform 0.3s;
+}
+
+.floating-button svg.rotated {
+  transform: rotate(135deg);
+}
+
+.quick-dial-menu {
+  position: absolute;
+  bottom: 75px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: menuSlideUp 0.3s ease-out;
+}
+
+@keyframes menuSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quick-dial-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.quick-dial-button:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.quick-dial-icon {
+  font-size: 1.25rem;
+}
+
+.quick-dial-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .call-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .floating-emergency-button {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .floating-button {
+    width: 56px;
+    height: 56px;
+  }
+
+  .quick-dial-menu {
+    bottom: 70px;
+  }
+}
+
+@media (max-width: 640px) {
+  .emergency-call-panel {
+    padding: 1.5rem 1rem;
+  }
+
+  .panel-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .call-button {
+    padding: 0.875rem 1rem;
+  }
+
+  .button-icon {
+    font-size: 1.5rem;
+  }
+
+  .button-label {
+    font-size: 0.875rem;
+  }
+
+  .button-number {
+    font-size: 0.75rem;
+  }
+}
