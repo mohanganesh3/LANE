@@ -1,0 +1,286 @@
+.comparison-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.comparison-modal {
+  background: white;
+  border-radius: 1rem;
+  max-width: 1200px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.comparison-header h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.comparison-header i {
+  color: #10b981;
+}
+
+.close-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: none;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.close-btn:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.comparison-empty {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.comparison-empty i {
+  font-size: 4rem;
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
+
+.comparison-empty p {
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.comparison-table-wrapper {
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.comparison-table thead {
+  background-color: #f9fafb;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.comparison-table th {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ride-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ride-header img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ride-header strong {
+  display: block;
+  font-size: 0.9375rem;
+}
+
+.ride-header p {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin: 0;
+  font-weight: normal;
+}
+
+.feature-label {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.best-value {
+  background-color: #d1fae5;
+  color: #10b981;
+  font-weight: 600;
+  position: relative;
+}
+
+.best-value i {
+  margin-left: 0.5rem;
+  color: #10b981;
+}
+
+.rides-selector {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.rides-selector h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.rides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.ride-card {
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ride-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ride-card.selected {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.ride-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ride-info img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ride-info strong {
+  display: block;
+  font-size: 0.9375rem;
+  color: #1f2937;
+}
+
+.ride-info p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.ride-card i {
+  color: #10b981;
+  font-size: 1.25rem;
+}
+
+.comparison-actions {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  background: white;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #059669;
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .comparison-table-wrapper {
+    padding: 1rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .rides-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
