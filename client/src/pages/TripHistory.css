@@ -1,0 +1,471 @@
+.trip-history-container {
+  padding-top: 5rem;
+  padding-bottom: 3rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.trip-history-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #e5e7eb;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.trip-history-header {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header-text h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-text p {
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.header-stats-badge {
+  text-align: center;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header-stats-badge {
+    display: block;
+  }
+}
+
+.total-trips {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.header-stats-badge p {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.stats-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .stats-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.stat-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.stat-icon.purple {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+
+.stat-icon.green {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+.stat-icon.yellow {
+  background-color: #fef3c7;
+  color: #f59e0b;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars-small {
+  color: #fbbf24;
+  font-size: 0.875rem;
+  display: flex;
+  gap: 0.125rem;
+}
+
+.trips-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.empty-state {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  text-align: center;
+}
+
+.empty-state i {
+  color: #d1d5db;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #9ca3af;
+  margin-bottom: 1.5rem;
+}
+
+.trip-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.trip-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.trip-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.trip-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.trip-icon {
+  width: 3rem;
+  height: 3rem;
+  background-color: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.rider-photo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.trip-info h3 {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.trip-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.rider-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.trip-amount {
+  text-align: right;
+}
+
+.amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #10b981;
+  margin-bottom: 0.25rem;
+}
+
+.trip-amount p {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.trip-route {
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.route-points {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.route-point {
+  display: flex;
+  align-items: center;
+  color: #374151;
+}
+
+.route-point i {
+  width: 1.5rem;
+  font-size: 1rem;
+}
+
+.route-point i.start {
+  color: #10b981;
+}
+
+.route-point i.end {
+  color: #ef4444;
+}
+
+.route-point span {
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  color: #d1d5db;
+  margin-left: 1.5rem;
+}
+
+.distance {
+  margin-left: 0.75rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.carbon-badge {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #d1fae5, #99f6e4);
+  border-radius: 0.5rem;
+  border: 1px solid #6ee7b7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.carbon-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carbon-info i {
+  color: #10b981;
+  font-size: 1.25rem;
+}
+
+.carbon-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.carbon-value {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #10b981;
+}
+
+.carbon-trees {
+  text-align: right;
+}
+
+.carbon-trees p:first-child {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.trees-count {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+.passengers-section {
+  margin-bottom: 1rem;
+}
+
+.passengers-section h4 {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+.passengers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.passenger-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+.passenger-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.passenger-info img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.passenger-name {
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.passenger-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.passenger-amount {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.trip-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #059669;
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
